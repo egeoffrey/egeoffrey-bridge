@@ -1,0 +1,15 @@
+## EGEOFFREY
+# Topic format: egeoffrey/v1/<house_id>/<from_scope/<from_module>/<to_scope>/<to_module>/<command>/<args>
+
+## GUI user (if configured) allow broacasting its own manifest when EGEOFFREY_BROADCAST_MANIFEST is enabled
+user gui
+topic readwrite egeoffrey/+/*/+/+/+/+/MANIFEST/#
+
+## all the users
+# allow read/write to their own user-scope
+pattern readwrite egeoffrey/+/%u/#
+# allow reading broacasted messages if any
+pattern read egeoffrey/+/*/+/+/+/+/MANIFEST/#
+# allow briges to keep their connection
+pattern write $SYS/broker/connection/%c/state
+

@@ -8,13 +8,14 @@ container_config:
   - ./data/bridge/config:/bridge/config
   - ./data/bridge/data:/bridge/data
   - ./data/bridge/logs:/bridge/logs
-description: Runs a local gateway which bridges connections to a remote gateway, buffering messages while offline
+description: Runs a local gateway which bridges connections to a remote gateway, buffering
+  messages while offline
 dockerhub: egeoffrey/egeoffrey-bridge
 github: egeoffrey/egeoffrey-bridge
 icon: link
 manifest_schema: 2
 modules: []
 package: egeoffrey-bridge
-revision: 1
+revision: 2
 tags: gateway bridge
 version: 1.0

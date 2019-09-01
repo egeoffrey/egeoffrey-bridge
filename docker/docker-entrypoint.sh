@@ -14,7 +14,9 @@ if [ -z "$EGEOFFREY_GATEWAY_HOSTNAME" ]; then
 fi
 sed -i "s/EGEOFFREY_GATEWAY_HOSTNAME/$EGEOFFREY_GATEWAY_HOSTNAME/g" $CONFIG_FILE
 # set gateway port
-if [ -z "$EGEOFFREY_GATEWAY_PORT" ]; then
+if [ -n "$EGEOFFREY_GATEWAY_CA_CERT" ]; then
+    EGEOFFREY_GATEWAY_PORT=8883
+else
     EGEOFFREY_GATEWAY_PORT=1883
 fi
 sed -i "s/EGEOFFREY_GATEWAY_PORT/$EGEOFFREY_GATEWAY_PORT/g" $CONFIG_FILE
@@ -24,7 +26,10 @@ if [ -z "$EGEOFFREY_ID" ]; then
 fi
 sed -i "s/EGEOFFREY_ID/$EGEOFFREY_ID/g" $CONFIG_FILE
 # set house passcode
-sed -i "s/EGEOFFREY_PASSCODE/$EGEOFFREY_PASSCODE/g" $CONFIG_FILE
+if [ -n "$EGEOFFREY_PASSCODE" ]; then
+    sed -i "s/#local_password EGEOFFREY_PASSCODE/local_password $EGEOFFREY_PASSCODE/g" $CONFIG_FILE
+    sed -i "s/#remote_password EGEOFFREY_PASSCODE/remote_password $EGEOFFREY_PASSCODE/g" $CONFIG_FILE
+fi
 # set ca file
 if [ -n "$EGEOFFREY_GATEWAY_CA_CERT" ]; then
     sed -i "s/#bridge_cafile \/mosquitto\/config\/ca.crt/bridge_cafile \/mosquitto\/config\/ca.crt/g" $CONFIG_FILE

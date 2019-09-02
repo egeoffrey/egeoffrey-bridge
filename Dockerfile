@@ -4,6 +4,9 @@
 ARG ARCHITECTURE
 FROM $ARCHITECTURE/eclipse-mosquitto
 
+### install dependencies
+RUN apk update && apk add ca-certificates openssl && rm -rf /var/cache/apk/*
+
 ### expose the data folder into a static location
 RUN mkdir -p /bridge && ln -s /mosquitto/config /bridge/config && ln -s /mosquitto/data /bridge/data && ln -s /mosquitto/log /bridge/logs && rm -f /bridge/config/mosquitto.conf
 VOLUME ["/bridge/config", "/bridge/data", "/bridge/logs"]

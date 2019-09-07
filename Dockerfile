@@ -2,7 +2,7 @@
 
 ### define base image
 ARG ARCHITECTURE
-FROM $ARCHITECTURE/eclipse-mosquitto
+FROM $ARCHITECTURE/eclipse-mosquitto:1.5.8
 
 ### define workdir
 ENV WORKDIR=/bridge

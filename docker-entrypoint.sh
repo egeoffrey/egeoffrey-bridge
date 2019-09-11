@@ -1,5 +1,8 @@
 #!/bin/sh
 
+CONFIG_FILE="config/mosquitto.conf"
+PASSWORD_FILE="/mosquitto/config/passwords.txt"
+
 # execute mosquitto
 if [ "$1" = 'mosquitto' ]; then
     # if the config directory is empty copy there the default configuration
@@ -7,10 +10,31 @@ if [ "$1" = 'mosquitto' ]; then
         echo -e "Deploying default configuration..."
         cp -Rf default_config/* config
     fi
+    
+    # add broker users provided by the env variable (in the format user1:password1\nuser2:password2)
+    if [ -n "$EGEOFFREY_GATEWAY_USERS" ]; then 
+        echo -e "Configuring users..."
+        echo -e $EGEOFFREY_GATEWAY_USERS > $PASSWORD_FILE
+        mosquitto_passwd -U $PASSWORD_FILE
+        sed -i -E "s/^#password_file (.+)$/password_file \1/" $CONFIG_FILE
+        sed -i -E "s/^#allow_anonymous (.+)$/allow_anonymous false/" $CONFIG_FILE
+    else
+        echo "" > $PASSWORD_FILE
+        sed -i -E "s/^password_file (.+)$/#password_file \1/" $CONFIG_FILE
+        sed -i -E "s/^allow_anonymous (.+)$/#allow_anonymous false/" $CONFIG_FILE
+    fi
+    
+    # enable ACLs
+    if [ -n "$EGEOFFREY_GATEWAY_ACL" ]; then 
+        echo -e "Enabling ACLs..."
+        sed -i -E "s/^#acl_file (.+)/acl_file \1/" $CONFIG_FILE
+    else
+        sed -i -E "s/^acl_file (.+)/#acl_file \1/" $CONFIG_FILE
+    fi
+
 
     # replace placeholders in configuration
     echo -e "Generating configuration file..."
-    CONFIG_FILE="config/mosquitto.conf"
 
     # set gateway hostname
     if [ -z "$REMOTE_EGEOFFREY_GATEWAY_HOSTNAME" ]; then
@@ -28,7 +52,9 @@ if [ "$1" = 'mosquitto' ]; then
 
     # set gateway ssl
     if [ "$REMOTE_EGEOFFREY_GATEWAY_SSL" = "1"]; then
-        sed -i "s/#bridge_capath \/etc\/ssl\/certs/bridge_capath \/etc\/ssl\/certs/g" $CONFIG_FILE
+        sed -i -E "s/^#bridge_capath (.+)$/bridge_capath \1/" $CONFIG_FILE
+    else
+        sed -i -E "s/^bridge_capath (.+)$/#bridge_capath \1/" $CONFIG_FILE
     fi
 
     # set house id
@@ -41,17 +67,16 @@ if [ "$1" = 'mosquitto' ]; then
 
     # set house passcode
     if [ -n "$EGEOFFREY_PASSCODE" ]; then
-        sed -i "s/#local_password EGEOFFREY_PASSCODE/local_password $EGEOFFREY_PASSCODE/g" $CONFIG_FILE
+        sed -i -E "s/^#local_password EGEOFFREY_PASSCODE/local_password $EGEOFFREY_PASSCODE/" $CONFIG_FILE
+    else
+        sed -i -E "s/^local_password EGEOFFREY_PASSCODE/#local_password $EGEOFFREY_PASSCODE/" $CONFIG_FILE
     fi
     if [ -n "$REMOTE_EGEOFFREY_PASSCODE" ]; then
-        sed -i "s/#remote_password REMOTE_EGEOFFREY_PASSCODE/remote_password $REMOTE_EGEOFFREY_PASSCODE/g" $CONFIG_FILE
+        sed -i -E "s/^#remote_password REMOTE_EGEOFFREY_PASSCODE/remote_password $REMOTE_EGEOFFREY_PASSCODE/" $CONFIG_FILE
+    else
+        sed -i -E "s/^remote_password REMOTE_EGEOFFREY_PASSCODE/#remote_password $REMOTE_EGEOFFREY_PASSCODE/" $CONFIG_FILE
     fi
 
-    # copy test CA certificate in /etc/ssl/certs
-    cp -f default_config/certs/ca.crt /etc/ssl/certs/eGeoffrey_test_CA.pem
-
-    # rehash certificates in case a custom certificate has been mapped into /etc/ssl/certs
-    for file in /etc/ssl/certs/*.pem; do FILE=/etc/ssl/certs/"$(openssl x509 -hash -noout -in "$file")".0 &&  rm -f $FILE && ln -s "$file" $FILE; done
     # run user setup script if found
     if [ -f "./docker-init.sh" ]; then 
         echo -e "Running init script..."

@@ -22,7 +22,7 @@ RUN ln -s /mosquitto/config config \
   && ln -s /mosquitto/data data \
   && ln -s /mosquitto/log logs \
   && rm -f /bridge/config/mosquitto.conf \
-  && chown -R mosquitto.mosquitto /bridge
+  && chown -R mosquitto.mosquitto /bridge \
   && chown -R mosquitto.mosquitto /mosquitto \
   && cp -f default_config/certs/ca.crt /etc/ssl/certs/eGeoffrey_test_CA.pem \
   && for file in /etc/ssl/certs/*.pem; do FILE=/etc/ssl/certs/"$(openssl x509 -hash -noout -in "$file")".0 &&  rm -f $FILE && ln -s "$file" $FILE; done

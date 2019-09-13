@@ -16,6 +16,6 @@ icon: link
 manifest_schema: 2
 modules: []
 package: egeoffrey-bridge
-revision: 6
+revision: 7
 tags: gateway bridge
 version: 1.0

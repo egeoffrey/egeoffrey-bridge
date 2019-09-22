@@ -58,4 +58,4 @@ gateway bridge
 
 ## Version
 
-The version of this egeoffrey-bridge is 1.0-8 on the development branch.
+The version of this egeoffrey-bridge is 1.0-9 on the master branch.

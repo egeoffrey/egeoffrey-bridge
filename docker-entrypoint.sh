@@ -51,7 +51,7 @@ if [ "$1" = 'mosquitto' ]; then
     sed -i "s/REMOTE_EGEOFFREY_GATEWAY_PORT/$REMOTE_EGEOFFREY_GATEWAY_PORT/g" $CONFIG_FILE
 
     # set gateway ssl
-    if [ "$REMOTE_EGEOFFREY_GATEWAY_SSL" = "1"]; then
+    if [ "$REMOTE_EGEOFFREY_GATEWAY_SSL" = "1" ]; then
         sed -i -E "s/^#bridge_capath (.+)$/bridge_capath \1/" $CONFIG_FILE
     else
         sed -i -E "s/^bridge_capath (.+)$/#bridge_capath \1/" $CONFIG_FILE
@@ -62,8 +62,8 @@ if [ "$1" = 'mosquitto' ]; then
         echo "ERROR: no local/remote house id provided"
         exit 1
     fi
-    sed -i "s/EGEOFFREY_ID/$EGEOFFREY_ID/g" $CONFIG_FILE
     sed -i "s/REMOTE_EGEOFFREY_ID/$REMOTE_EGEOFFREY_ID/g" $CONFIG_FILE
+    sed -i "s/EGEOFFREY_ID/$EGEOFFREY_ID/g" $CONFIG_FILE
 
     # set house passcode
     if [ -n "$EGEOFFREY_PASSCODE" ]; then
@@ -84,6 +84,7 @@ if [ "$1" = 'mosquitto' ]; then
     fi
     # start mosquitto
     echo -e "Starting moquitto..."
+    chown -R mosquitto.mosquitto /mosquitto
     exec /usr/sbin/mosquitto -c /mosquitto/config/mosquitto.conf 
 fi
 

@@ -37,9 +37,9 @@ ports:
 - 1883:1883
 - 8883:8883
 volumes:
-- ./data/bridge/config:/bridge/config
-- ./data/bridge/data:/bridge/data
-- ./data/bridge/logs:/bridge/logs
+- ./data/bridge/config:/mosquitto/config
+- ./data/bridge/data:/mosquitto/data
+- ./data/bridge/logs:/mosquitto/logs
 ```
 
 ## Uninstall
@@ -58,4 +58,4 @@ gateway bridge
 
 ## Version
 
-The version of this egeoffrey-bridge is 1.0-12 on the master branch.
+The version of this egeoffrey-bridge is 1.1-1 on the master branch.

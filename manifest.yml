@@ -5,9 +5,9 @@ container_config:
   - 1883:1883
   - 8883:8883
   volumes:
-  - ./data/bridge/config:/bridge/config
-  - ./data/bridge/data:/bridge/data
-  - ./data/bridge/logs:/bridge/logs
+  - ./data/bridge/config:/mosquitto/config
+  - ./data/bridge/data:/mosquitto/data
+  - ./data/bridge/logs:/mosquitto/logs
 description: Runs a local gateway which bridges connections to a remote gateway, buffering
   messages while offline
 dockerhub: egeoffrey/egeoffrey-bridge
@@ -16,6 +16,6 @@ icon: link
 manifest_schema: 2
 modules: []
 package: egeoffrey-bridge
-revision: 12
+revision: 1
 tags: gateway bridge
-version: 1.0
+version: 1.1

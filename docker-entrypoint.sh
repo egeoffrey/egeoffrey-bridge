@@ -1,14 +1,14 @@
 #!/bin/sh
 
-CONFIG_FILE="config/mosquitto.conf"
+CONFIG_FILE="/mosquitto/config/mosquitto.conf"
 PASSWORD_FILE="/mosquitto/config/passwords.txt"
 
 # execute mosquitto
 if [ "$1" = 'mosquitto' ]; then
     # if the config directory is empty copy there the default configuration
-    if [ ! "$(ls -A config)" ]; then
+    if [ ! "$(ls -A /mosquitto/config)" ]; then
         echo -e "Deploying default configuration..."
-        cp -Rf default_config/* config
+        cp -Rf default_config/* /mosquitto/config
     fi
     
     # add broker users provided by the env variable (in the format user1:password1\nuser2:password2)

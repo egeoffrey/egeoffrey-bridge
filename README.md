@@ -28,7 +28,7 @@ If you are a user willing to contribute to somebody's else package, submit your 
 
 Building is required only if you are the author of the package. To build a Docker image and automatically push it to [Docker Hub](https://hub.docker.com/r/egeoffrey/egeoffrey-bridge), run the following command from within this package's directory:
 ```
-egeoffrey-cli build egeoffrey-bridge <amd64|arm>
+egeoffrey-cli build egeoffrey-bridge
 ```
 To function properly, when running in a Docker container, the following additional configuration settings has to be added to e.g. your docker-compose.yml file (when installing through egeoffrey-cli, this is not needed since done automatically upon installation):
 ```
@@ -58,4 +58,4 @@ gateway bridge
 
 ## Version
 
-The version of this egeoffrey-bridge is 1.1-1 on the master branch.
+The version of this egeoffrey-bridge is 1.1-2 on the development branch.
